@@ -6,7 +6,7 @@ var transporteurSchema =  mongoose.Schema({
     motDepasse: String,
     localisation: String,
     camion:{type: String, enum: ['Any', 'Small', 'Light', 'Medium', 'Heavy']},
-    company_id: String
+
 })
 
 module.exports = mongoose.model("Transporteur", transporteurSchema);

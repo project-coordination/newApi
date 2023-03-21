@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const mongoose = require('mongoose');
 const Transporter = require('../models/transporteurs');
-var bcrypt = require('bcrypt');
+
 
 
 router.get('/',async function(req, res, next) {
@@ -11,24 +11,23 @@ router.get('/',async function(req, res, next) {
 });
 
 router.post('/', async function(req, res, next){
-    if(req.body[0].motDepasse != req.body[0].confirm){
+    if(req.body.motDepasse != req.body.confirm){
       res.json({status:400,message: "Le mot de passe ne correspond pas"});
     }else{
   
-      let transporter1 = await Transporter.find( { $or:[{'email':req.body[0].email}, {'nom':req.body[0].nom} ]});
+      let transporter1 = await Transporter.find( { $or:[{'email':req.body.email}, {'nom':req.body.nom} ]});
       let length = transporter1.length;
         if(length > 0){
         res.json({status:400,message: "Ce transporteur existe deja"});
       }else{
-      let salt = await bcrypt.genSalt(10);
-      let hash = await bcrypt.hash(req.body[0].motDepasse, salt);
+     
       var transporter = new Transporter({
-        nom: req.body[0].nom,
-        email: req.body[0].email,
-        motDepasse: hash,
-        localisation:req.body[0].localisation,
-        camion:req.body[0].camion,
-        company_id:req.body[0].company_id
+        nom: req.body.nom,
+        email: req.body.email,
+        motDepasse: req.body.motDepasse,
+        localisation:req.body.localisation,
+        camion:req.body.camion,
+     
       });    
       try{
         const save= await transporter.save();
@@ -43,8 +42,7 @@ router.post('/', async function(req, res, next){
 router.post('/login', async function(req, res, next){
   var transporter = await Transporter.findOne({email: req.body.email});
   if(transporter){
-    var compare = await bcrypt.compare(req.body.motDepasse,transporter.motDepasse);
-    if(compare){
+    if(req.body.motDepasse===transporter.motDepasse){
       res.json({status:200, message:"Connecté avec succes",transporter});
     }else{
       res.json({status:400, message:"Mot de passe incorrecte"});

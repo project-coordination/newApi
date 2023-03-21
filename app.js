@@ -18,9 +18,7 @@ db.once('open', function() {
 });
 
 
-var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var compagnieRouter = require('./routes/compagnie');
 var transporteurRouter = require('./routes/transporteur');
 var demandeCoursesRouter = require('./routes/demandeCourses');
 
@@ -38,9 +36,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+
 app.use('/users', usersRouter);
-app.use('/compagnie', compagnieRouter);
 app.use('/transporteur', transporteurRouter);
 app.use('/demandeCourses', demandeCoursesRouter);
 
