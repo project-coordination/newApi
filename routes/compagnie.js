@@ -10,21 +10,21 @@ router.get('/',async function(req, res, next){
 })
 
 router.post('/', async function(req, res, next){
-      if(req.body.password != req.body.confirm){
-        res.json({message: "Passwords does not match"});
+      if(req.body.motDepasse != req.body.confirm){
+        res.json({message: "Le mot de passe ne correspond pas"});
       }else{
-        // let company1 = await Company.findOne({email: req.body.email});
-       let company1 = await Company.find( { $or:[{'email':req.body.email}, {'name':req.body.name} ]});
+    
+       let company1 = await Company.find( { $or:[{'email':req.body.email}, {'nom':req.body.nom} ]});
 
         if(company1){
-          res.json({message: "This Company already exists"});
+          res.json({message: "Cette compagnie existe"});
         }else{
         let salt = await bcrypt.genSalt(10);
-        let hash = await bcrypt.hash(req.body.password, salt);
+        let hash = await bcrypt.hash(req.body.motDepasse, salt);
         var company = new Company({
-          name: req.body.name,
+          nom: req.body.nom,
           email: req.body.email,
-          password: hash
+          motDepasse: hash
         });    
         try{
           const save= await company.save();
@@ -42,12 +42,12 @@ router.post('/login', async function(req, res, next){
   if(company1){
     var compare = await bcrypt.compare(req.body.password,company1.password);
     if(compare){
-      res.json({message:"Login success",company:company1});
+      res.json({message:"Connecté avec succes",company:company1});
     }else{
-      res.json({message:"Password error"});
+      res.json({message:"Echec de mot passe"});
     }
   }else{
-    res.json({message: "This Company does not exists"});
+    res.json({message: "Cette compagnie n'existe pas"});
   }
 })
 

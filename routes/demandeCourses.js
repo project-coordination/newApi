@@ -16,16 +16,16 @@ router.post('/', async function(req, res, next){
     if(!user) res.json({message: 'User not found'});
     var demand1 = new Demand({
         cargo:req.body.cargo,
-        truck:req.body.truck,
+        camion:req.body.camion,
         date:req.body.date,
         hour:req.body.hour,
-        location_from: req.body.location_from,
-        city_from:req.body.city_from,
-        location_to: req.body.location_to,
-        city_to:req.body.city_to,
+        villeDepart: req.body.villeDepart,
+        villeDepart:req.body.villeDepart,
+        villeDarrivee: req.body.villeDarrivee,
+        localisation:req.body.localisation,
         dimension: req.body.dimension,
         statut: "en_attente",
-        payment_type: req.body.payment_type,
+        typePaiment: req.body.typePaiment,
         client_id: req.body.client_id
     })
     try{
@@ -39,10 +39,6 @@ router.post('/', async function(req, res, next){
 
 router.get('/:id', async function(req, res, next){
     var id = req.params.id;
-    // var transporter = await Transporter.findById(id);
-    // var location = transporter.location;
-    // var truck = transporter.truck;
-
     var demands = await Demand.find({client_id: id});
     console.log(demands);
     res.json(demands);

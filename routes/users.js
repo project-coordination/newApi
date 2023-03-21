@@ -21,21 +21,21 @@ router.get('/:id',async function(req, res, next) {
 // Hasher le mot de passe
 router.post('/', async function(req, res, next){
     
-      if(req.body[0].password != req.body[0].confirm){
+      if(req.body[0].motDepasse != req.body[0].confirm){
         res.json({status:400,message: "Le mot de passe est incorrect"});
       }else{
-       let user = await User.find( { $or:[{'email':req.body[0].email}, {'name':req.body[0].nom} ]});
-        let length = user.length;
+       let userHash = await User.find( { $or:[{'email':req.body[0].email}, {'nom':req.body[0].nom} ]});
+        let length = userHash.length;
         console.log(length);
         if(length > 0){
           res.json({status:400, message: "Utilisateur existant"});
         }else{
         let salt = await bcrypt.genSalt(10);
-        let hash = await bcrypt.hash(req.body[0].password, salt);
-        var userHash = new User({
-          name: req.body[0].nom,
+        let hash = await bcrypt.hash(req.body[0].motDepasse, salt);
+        var user = new User({
+          nom: req.body[0].nom,
           email: req.body[0].email,
-          phone: req.body[0].tel,
+          tel: req.body[0].tel,
           motDepasse: hash
         });    
         try{
